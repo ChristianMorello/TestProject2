@@ -22,7 +22,7 @@ def add_user():
         
      os.system('useradd ' + username)
      command = 'passwd --stdin ' + username
-     p = os.system('echo -e "password\npassword\npassword".%s\sudo -S %s' %(sudoPassword, command))
+     p = os.system('echo -e "password\npassword\npassword".%s|sudo -S %s' %(sudoPassword, command))
 
 def randomPasswordGenerator():
     # Getting password length
@@ -48,15 +48,15 @@ def randomPasswordGenerator():
     
     # printing password as a string
     stringPassword = "".join(password)
-    print("The random password is " + "".join(password))
+    print("The random password is " + stringPassword))
     return stringPassword
 
 def install_items():
     os.system('sudo dnf upgrade')
     os.system('sudo yum -y install httpd')
     os.system('sudo yum -y install php-{common,gmp,fpm,curl,intl,pdo,mbstring,gd,xml,cli,zip}')
-    os.system('firewall-cmd --permanent --zone=public --add-service+http')
-    os.system('firewall-cmd --permanent --zone=public --add-service+https')
+    os.system('sudo firewall-cmd --permanent --zone=public --add-service=http')
+    os.system('sudo firewall-cmd --permanent --zone=public --add-service=https')
     os.system('firewall-cmd --permanent --add-port=80/tcp')
     os.system('firewall-cmd --reload')
     os.system('systemctl enable --now httpd')
