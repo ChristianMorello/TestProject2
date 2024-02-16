@@ -127,9 +127,3 @@ elif input_b == "Yes":
             disableSeLinux()
         elif input_a == "stop":
             exit()
-    elif input_a == "complete":
-        add_user()
-        install_items()
-        configurePHPfile()
-        configureSwapFile()
-        disableSeLinux()
