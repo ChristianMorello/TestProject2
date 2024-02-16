@@ -97,28 +97,36 @@ def disableSeLinux():
         for i in data:
             file.write(i) 
 
-
-a = True
-while a == True:
-    print("Write either, 1, 2, 4, 5, 6 or complete.")
-    input_a = input()
-    if input_a == 1:
-        # Step 1
-        add_user()
-    elif input_a == 2:
-        # Step 2 And 3
-        install_items()
-    elif input_a == 4:
-        # Step 4
-        configurePHPfile()
-    elif input_a == 5:
-        # Step 5
-        configureSwapFile()
-    elif input_a == 6:
-        # Step 6
-        disableSeLinux()
-    elif input_a == "stop":
-        exit()
+print("Test Code? (Yes or No)")
+input_b = input()
+if input_b = "No":
+    add_user()
+    install_items()
+    configurePHPfile()
+    configureSwapFile()
+    disableSeLinux()
+elif input_b = "Yes":
+    a = True
+    while a == True:
+        print("Write either, 1, 2, 4, 5, 6 or complete.")
+        input_a = input()
+        if input_a == 1:
+            # Step 1
+            add_user()
+        elif input_a == 2:
+            # Step 2 And 3
+            install_items()
+        elif input_a == 4:
+            # Step 4
+            configurePHPfile()
+        elif input_a == 5:
+            # Step 5
+            configureSwapFile()
+        elif input_a == 6:
+            # Step 6
+            disableSeLinux()
+        elif input_a == "stop":
+            exit()
     elif input_a == "complete":
         add_user()
         install_items()
