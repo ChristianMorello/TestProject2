@@ -99,13 +99,13 @@ def disableSeLinux():
 
 print("Test Code? (Yes or No)")
 input_b = input()
-if input_b = "No":
+if input_b == "No":
     add_user()
     install_items()
     configurePHPfile()
     configureSwapFile()
     disableSeLinux()
-elif input_b = "Yes":
+elif input_b == "Yes":
     a = True
     while a == True:
         print("Write either, 1, 2, 4, 5, 6 or complete.")
