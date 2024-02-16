@@ -48,7 +48,7 @@ def randomPasswordGenerator():
     
     # printing password as a string
     stringPassword = "".join(password)
-    print("The random password is " + stringPassword))
+    print("The random password is " + stringPassword)
     return stringPassword
 
 def install_items():
