@@ -1,28 +1,28 @@
 # Python script for configuration management tool
 # First create a user
 from fcntl import DN_DELETE
+from time import sleep
 import os
 import subprocess
+from subprocess import Popen
 import sys
 import getpass
 import random
 import string
  
 # add user function
-# Sourced from https://www.geeksforgeeks.org/add-a-user-in-linux-using-python-script/
 def add_user():
  
      # Ask for the input
-     username = input("Enter Username ")   
+     print("Enter Username ")
+     username = input()   
  
      # Asking for users password
-     password = randomPasswordGenerator()
+     sudoPassword = randomPasswordGenerator()
         
      os.system('useradd ' + username)
-     os.system('passwd ' + password)
-     os.system(password)
-
-# Sourced from https://www.geeksforgeeks.org/create-a-random-password-generator-using-python/
+     command = 'passwd --stdin ' + username
+     p = os.system('echo -e "password\npassword\npassword".%s\sudo -S %s' %(sudoPassword, command))
 
 def randomPasswordGenerator():
     # Getting password length
@@ -34,8 +34,6 @@ def randomPasswordGenerator():
     characterList += string.ascii_letters
 
     characterList += string.digits
-
-    characterList += string.punctuation
     
     password = []
     
@@ -49,22 +47,26 @@ def randomPasswordGenerator():
         password.append(randomchar)
     
     # printing password as a string
+    stringPassword = "".join(password)
     print("The random password is " + "".join(password))
-    return password
+    return stringPassword
 
 def install_items():
-    os.system('sudo nf upgrade')
+    os.system('sudo dnf upgrade')
     os.system('sudo yum -y install httpd')
-    os.system('sudo yum -y install php')
+    os.system('sudo yum -y install php-{common,gmp,fpm,curl,intl,pdo,mbstring,gd,xml,cli,zip}')
+    os.system('firewall-cmd --permanent --zone=public --add-service+http')
+    os.system('firewall-cmd --permanent --zone=public --add-service+https')
     os.system('firewall-cmd --permanent --add-port=80/tcp')
     os.system('firewall-cmd --reload')
-    os.system('systemctl enable --now http')
+    os.system('systemctl enable --now httpd')
+    os.system('sudo dnf module enable php')
     os.system('sudo chkconfig httpd on')
 
 def configurePHPfile():
     phpFileContents = ["<!DOCTYPE html>", "<html>", "<body>", "<?php", "$AEST = date_default_timezone_set('Australia/Melbourne');", "echo 'Last name: Morello';", "echo 'AEST Time is: ' . $AEST . '<br>'';", "$CEST = date_default_timezone_set('Italy');", "echo 'AEST Time is: ' . $CEST . '<br>';", "?>", "</body>", "</html>"]
     f = open("/var/www/html/index.php", "w")
-    for i in len(phpFileContents):
+    for i in phpFileContents:
         f.write(i + '\n')
     f.close()
 
@@ -78,23 +80,27 @@ def configureSwapFile():
     a.close()
 
 def disableSeLinux():
+    count = 0
+    number = 0
     with open("/etc/selinux/config", 'r') as file: 
         data = file.readlines()
     for t in data:
-        if t == "SELINUX=disabled":
-            continue
-        elif t == "SELINUX=enforcing":
-            t = "SELINUX=disabled"
-        elif t == "SELINUX=permissive":
-            t = "SELINUX=disabled"
-    
+        if "SELINUX=d" in t:
+            number = count
+        elif "SELINUX=e" in t:
+            number = count
+        elif "SELINUX=p" in t:
+            number = count
+        count = count + 1
+    data[number] = 'SELINUX=disabled' + '\n'
     with open("/etc/selinux/config", 'w') as file: 
-        file.writelines(data) 
+        for i in data:
+            file.write(i) 
 
 
 a = True
 while a == True:
-    print("Step 1, Step 2, Step 4, Step 5 or Step 6")
+    print("Write either, 1, 2, 4, 5, 6 or complete.")
     input_a = input()
     if input_a == 1:
         # Step 1
@@ -105,9 +111,17 @@ while a == True:
     elif input_a == 4:
         # Step 4
         configurePHPfile()
-    elif input_a == 6:
+    elif input_a == 5:
         # Step 5
         configureSwapFile()
     elif input_a == 6:
         # Step 6
+        disableSeLinux()
+    elif input_a == "stop":
+        exit()
+    elif input_a == "complete":
+        add_user()
+        install_items()
+        configurePHPfile()
+        configureSwapFile()
         disableSeLinux()
