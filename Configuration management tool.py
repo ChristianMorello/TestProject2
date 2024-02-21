@@ -52,7 +52,9 @@ def randomPasswordGenerator():
     return stringPassword
 
 def install_items():
-    os.system('sudo dnf upgrade')
+    inputb = input("Is there enough storage to update the system: Y or N): ")
+    if inputb == 'Y':
+        os.system('sudo dnf upgrade')
     os.system('sudo yum -y install httpd')
     os.system('sudo yum -y install php-{common,gmp,fpm,curl,intl,pdo,mbstring,gd,xml,cli,zip}')
     os.system('sudo firewall-cmd --permanent --zone=public --add-service=http')
